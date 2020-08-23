@@ -1,0 +1,116 @@
+<template>
+  <div class="main">
+    <div v-if="pokemon">
+      <header class="header">#{{ pokemon.id }} {{ pokemon.name }}</header>
+      <div v-if="pokemon.id" class="selected-pokemon">
+        <div class="pokemon-image-container">
+          <img
+            alt="pokemon"
+            v-bind:src="
+              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' +
+                pokemon.id +
+                '.png'
+            "
+          />
+        </div>
+        <div class="pokemon-information-container">
+          <div class="pokemon-information">
+            <span>Weight: {{ pokemon.weight }} </span>
+            <span>Height: {{ pokemon.height }}</span>
+            <div class="pokemon-type-container">
+              <span>type:</span>
+              <Type
+                v-for="type in pokemon.types"
+                :key="type.slot"
+                v-bind:name="type.type.name"
+              >
+              </Type>
+            </div>
+            <span>Evolution: {{ evolution }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Loading v-if="!pokemon"></Loading>
+  </div>
+</template>
+
+<script>
+import Loading from "@/components/Loading";
+import Type from "@/components/Type";
+import { mapState } from "vuex";
+import { GET_POKEMON } from "@/store/action-types";
+
+export default {
+  components: {
+    Loading,
+    Type
+  },
+  async mounted() {
+    await this.loadPokemon();
+  },
+  watch: {
+    "$route.params.name": async function() {
+      await this.loadPokemon();
+    }
+  },
+  methods: {
+    loadPokemon: async function() {
+      const pokemonName = this.$route.params.name;
+      await this.$store.dispatch(GET_POKEMON, pokemonName);
+    }
+  },
+  computed: mapState({
+    pokemon: state => state.pokemons.selectedPokemon,
+    evolution: state => state.pokemons.selectedPokemonEvolution
+  })
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.header {
+  margin-top: 2%;
+  font-family: "Arial Black", sans-serif;
+  font-size: xx-large;
+}
+.selected-pokemon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0;
+  align-items: center;
+  .pokemon-image-container {
+    width: 20%;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  .pokemon-information-container {
+    display: flex;
+    align-content: center;
+    border: black 3px solid;
+    border-radius: 15px;
+    width: 25%;
+    .pokemon-information {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+      height: auto;
+      font-weight: bold;
+      .pokemon-type-container {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        display: flex;
+        align-items: center;
+      }
+      span {
+        text-align: left;
+        padding: 1em;
+        font-size: medium;
+      }
+    }
+  }
+}
+</style>
