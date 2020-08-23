@@ -1,16 +1,36 @@
-<template> <div id="pokemon-type"></div></template>
+<template>
+  <div v-if="types">
+    <span id="pokemon-type-1">
+      {{ types[0].type.name }}
+    </span>
+    <span id="pokemon-type-2" v-if="types[1]"> {{ types[1].type.name }} </span>
+  </div></template
+>
 
 <script>
 export default {
   name: "Type",
-  props: ["name"],
+  props: ["types"],
   mounted() {
-    this.assignColor();
+    this.init();
+  },
+  watch: {
+    types: function() {
+      this.init();
+    }
   },
   methods: {
-    assignColor: function() {
+    init: function() {
+      let type1 = document.getElementById("pokemon-type-1");
+      this.assignColor(type1);
+      if(this.types[1]) {
+        let type2 = document.getElementById("pokemon-type-2");
+        this.assignColor(type2);
+      }
+    },
+    assignColor: function(span) {
       let color;
-      switch (this.name) {
+      switch (span.textContent) {
       case "grass":
         color = "#9bcc50";
         break;
@@ -63,18 +83,17 @@ export default {
         color = "#98D8D8";
         break;
       }
-      let typeSpan = document.createElement("span");
-      typeSpan.textContent =
-        this.name.charAt(0).toUpperCase() + this.name.slice(1);
-      typeSpan.style.backgroundColor = color;
-      typeSpan.style.padding = "5px";
-      typeSpan.style.color = "white";
-      typeSpan.style.fontWeight = "normal";
-      let typeDiv = document.getElementById("pokemon-type");
-      typeDiv.appendChild(typeSpan);
+      span.textContent =
+        span.textContent.charAt(0).toUpperCase() + span.textContent.slice(1);
+      span.style.backgroundColor = color;
     }
   }
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+span {
+  padding: 5px;
+  font-weight: normal;
+}
+</style>

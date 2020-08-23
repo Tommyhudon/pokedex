@@ -18,15 +18,17 @@
             <span>Weight: {{ pokemon.weight }} </span>
             <span>Height: {{ pokemon.height }}</span>
             <div class="pokemon-type-container">
-              <span>type:</span>
-              <Type
-                v-for="type in pokemon.types"
-                :key="type.slot"
-                v-bind:name="type.type.name"
-              >
-              </Type>
+              <span>Types:</span>
+              <div v-for="type in pokemon.types" :key="type.slot">
+                {{ type.type.name }}
+              </div>
             </div>
-            <span>Evolution: {{ evolution }}</span>
+            <span
+              >Evolution:
+              <router-link v-bind:to="`/pokemon/${evolution}`">{{
+                evolution
+              }}</router-link></span
+            >
           </div>
         </div>
       </div>
@@ -37,21 +39,19 @@
 
 <script>
 import Loading from "@/components/Loading";
-import Type from "@/components/Type";
 import { mapState } from "vuex";
-import {GET_EVOLUTION, GET_POKEMON, GET_SPECIES} from "@/store/action-types";
+import { GET_EVOLUTION, GET_POKEMON, GET_SPECIES } from "@/store/action-types";
 
 export default {
   components: {
-    Loading,
-    Type
+    Loading
   },
-  mounted() {
-    this.loadPokemon();
+  async mounted() {
+    await this.loadPokemon();
   },
   watch: {
-    "$route.params.name": function() {
-      this.loadPokemon();
+    "$route.params.name": async function() {
+      await this.loadPokemon();
     },
     species: function() {
       this.loadEvolution();
@@ -112,6 +112,9 @@ export default {
         padding-bottom: 1em;
         display: flex;
         align-items: center;
+        div {
+          padding-right: 5px;
+        }
       }
       span {
         text-align: left;
