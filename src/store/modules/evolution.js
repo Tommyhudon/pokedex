@@ -11,10 +11,9 @@ export const state = { ...initialState };
 
 export const actions = {
   async [GET_EVOLUTION](context, pokemonId) {
-    context.commit(SET_EVOLUTION, null);
     const { data } = await evolutionService.getEvolution(pokemonId);
-    context.commit(SET_EVOLUTION, data.chain.evolves_to.species);
-    return data;
+    context.commit(SET_EVOLUTION, data.chain.evolves_to[0].species.name);
+    return data.chain.evolves_to[0].species.name;
   }
 };
 

@@ -77,9 +77,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-#pokemon-type {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
+<style scoped lang="scss"></style>

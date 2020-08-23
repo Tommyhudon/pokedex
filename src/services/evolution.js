@@ -1,7 +1,7 @@
 import api from "./api";
 
-const getEvolution = pokemonId => {
-  return api.get(`/evolution-chain/${pokemonId}`);
+const getEvolution = url => {
+  return api.get(`${url}`);
 };
 
 export default {

@@ -19,7 +19,6 @@ export default {
   watch: {
     "$route.params.name": function() {
       this.loadEvolution();
-      console.log(this.evolution);
     }
   },
   methods: {

@@ -1,12 +1,17 @@
 import {} from "../action-types";
 import { GET_POKEMON, GET_POKEMONS } from "../action-types";
-import { SET_SELECTED_POKEMON, SET_POKEMONS } from "../mutation-types";
+import {
+  SET_SELECTED_POKEMON,
+  SET_POKEMONS,
+  SET_SPECIES
+} from "../mutation-types";
 import pokemonService from "@/services/pokemons";
+import { GET_SPECIES } from "../action-types";
 
 const initialState = {
   pokemons: [],
   selectedPokemon: 1,
-  selectedPokemonEvolution: null
+  selectedPokemonSpecies: null
 };
 
 export const state = { ...initialState };
@@ -21,6 +26,11 @@ export const actions = {
     const { data } = await pokemonService.getPokemon(pokemonId);
     context.commit(SET_SELECTED_POKEMON, data);
     return data;
+  },
+  async [GET_SPECIES](context, pokemonName) {
+    const { data } = await pokemonService.getPokemonSpecies(pokemonName);
+    context.commit(SET_SPECIES, data);
+    return data;
   }
 };
 export const mutations = {
@@ -29,6 +39,9 @@ export const mutations = {
   },
   [SET_POKEMONS](state, pokemons) {
     state.pokemons = pokemons;
+  },
+  [SET_SPECIES](state, species) {
+    state.selectedPokemonSpecies = species;
   }
 };
 
@@ -38,6 +51,9 @@ const getters = {
   },
   selectedPokemon(state) {
     return state.selectedPokemon;
+  },
+  selectedPokemonSpecies(state) {
+    return state.selectedPokemonSpecies;
   }
 };
 

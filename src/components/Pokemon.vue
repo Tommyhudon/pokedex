@@ -39,30 +39,38 @@
 import Loading from "@/components/Loading";
 import Type from "@/components/Type";
 import { mapState } from "vuex";
-import { GET_POKEMON } from "@/store/action-types";
+import {GET_EVOLUTION, GET_POKEMON, GET_SPECIES} from "@/store/action-types";
 
 export default {
   components: {
     Loading,
     Type
   },
-  async mounted() {
-    await this.loadPokemon();
+  mounted() {
+    this.loadPokemon();
   },
   watch: {
-    "$route.params.name": async function() {
-      await this.loadPokemon();
+    "$route.params.name": function() {
+      this.loadPokemon();
+    },
+    species: function() {
+      this.loadEvolution();
     }
   },
   methods: {
-    loadPokemon: async function() {
+    loadPokemon: function() {
       const pokemonName = this.$route.params.name;
-      await this.$store.dispatch(GET_POKEMON, pokemonName);
+      this.$store.dispatch(GET_POKEMON, pokemonName);
+      this.$store.dispatch(GET_SPECIES, pokemonName);
+    },
+    loadEvolution: function() {
+      this.$store.dispatch(GET_EVOLUTION, this.species.evolution_chain.url);
     }
   },
   computed: mapState({
     pokemon: state => state.pokemons.selectedPokemon,
-    evolution: state => state.pokemons.selectedPokemonEvolution
+    species: state => state.pokemons.selectedPokemonSpecies,
+    evolution: state => state.evolution.evolution
   })
 };
 </script>
