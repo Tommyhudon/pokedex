@@ -2,20 +2,20 @@
   <div id="app">
     <Banner />
     <Pokemon />
-    <Explorer />
+    <PokemonList />
   </div>
 </template>
 
 <script>
 import Pokemon from "./components/Pokemon.vue";
-import Explorer from "@/components/Explorer";
+import PokemonList from "@/components/PokemonList";
 import Banner from "@/components/Banner";
 
 export default {
   name: "App",
   components: {
     Pokemon,
-    Explorer,
+    PokemonList,
     Banner
   }
 };

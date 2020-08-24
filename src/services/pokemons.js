@@ -5,7 +5,7 @@ const getPokemon = pokemonName => {
 };
 
 const getPokemons = url => {
-  return api.get(`${url}`);
+  return api.get(url);
 };
 
 const getPokemonSpecies = pokemonName => {
