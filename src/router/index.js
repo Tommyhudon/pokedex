@@ -15,7 +15,7 @@ const router = new Router({
     },
     {
       path: "/",
-      redirect: "/pokemon/1"
+      redirect: "/pokemon/bulbasaur"
     }
   ]
 });
