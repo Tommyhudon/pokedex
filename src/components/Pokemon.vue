@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div v-if="pokemon">
+    <div v-if="!loading">
       <header class="header">#{{ pokemon.id }} {{ pokemon.name }}</header>
       <div v-if="pokemon.id" class="selected-pokemon">
         <div class="pokemon-image-container">
@@ -23,26 +23,38 @@
                 {{ type.type.name }}
               </div>
             </div>
-            <span
-              >Evolution:
-              <router-link v-bind:to="`/pokemon/${evolution}`">{{
-                evolution
-              }}</router-link></span
-            >
+            <div class="evolution-container" v-if="pokemonEvolution">
+              <span>Evolution:</span>
+              <span
+                v-for="evolution in pokemonEvolution"
+                :key="evolution.species.name"
+              >
+                <router-link v-bind:to="`/pokemon/${evolution.species.name}`">{{
+                  evolution.species.name
+                }}</router-link></span
+              >
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <Loading v-if="!pokemon"></Loading>
+    <Loading v-if="loading"></Loading>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import Loading from "@/components/Loading";
 import { mapState } from "vuex";
 import { GET_EVOLUTION, GET_POKEMON, GET_SPECIES } from "@/store/action-types";
 
 export default {
+  data: function() {
+    return {
+      pokemonEvolution: null,
+      loading: true
+    };
+  },
   components: {
     Loading
   },
@@ -51,20 +63,50 @@ export default {
   },
   watch: {
     "$route.params.name": async function() {
+      this.loading = true;
       await this.loadPokemon();
     },
-    species: function() {
-      this.loadEvolution();
+    species: async function() {
+      await this.loadEvolution();
+    },
+    evolution: function() {
+      this.findInChain(this.evolution);
+      this.loading = false;
     }
   },
   methods: {
     loadPokemon: function() {
       const pokemonName = this.$route.params.name;
-      this.$store.dispatch(GET_POKEMON, pokemonName);
-      this.$store.dispatch(GET_SPECIES, pokemonName);
+      this.$store.dispatch(GET_POKEMON, pokemonName).catch(err => {
+        Vue.toasted.error(err);
+      });
+      this.$store.dispatch(GET_SPECIES, pokemonName).catch(err => {
+        Vue.toasted.error(err);
+      });
     },
     loadEvolution: function() {
-      this.$store.dispatch(GET_EVOLUTION, this.species.evolution_chain.url);
+      this.$store
+        .dispatch(GET_EVOLUTION, this.species.evolution_chain.url)
+        .catch(err => {
+          Vue.toasted.error(err);
+        });
+    },
+    findInChain: function(chain) {
+      console.log(this.pokemon.name);
+      if (chain.species.name === this.pokemon.name) {
+        console.log(chain.species.name);
+        if (chain.evolves_to.length === 0) {
+          this.pokemonEvolution = null;
+        } else {
+          this.pokemonEvolution = chain.evolves_to;
+        }
+      } else {
+        if (chain.evolves_to.length === 1) {
+          this.findInChain(chain.evolves_to[0]);
+        } else {
+          this.pokemonEvolution = null;
+        }
+      }
     }
   },
   computed: mapState({
@@ -108,12 +150,17 @@ export default {
       height: auto;
       font-weight: bold;
       .pokemon-type-container {
-        padding-top: 1em;
-        padding-bottom: 1em;
         display: flex;
         align-items: center;
         div {
           padding-right: 5px;
+        }
+      }
+      .evolution-container {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+          padding-right: 1px;
         }
       }
       span {

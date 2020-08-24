@@ -10,12 +10,6 @@ class Api {
 
     Vue.use(VueAxios, axios);
     Vue.axios.defaults.baseURL = process.env.VUE_APP_API_URL;
-
-    Vue.axios.interceptors.response.use(this.handleSuccess);
-  }
-
-  handleSuccess(response) {
-    return response;
   }
 
   get(endpoint, params) {
