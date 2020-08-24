@@ -4,7 +4,7 @@ import { SET_EVOLUTION } from "../mutation-types";
 import evolutionService from "@/services/evolution";
 
 const initialState = {
-  evolution: null
+  evolutionChain: null
 };
 
 export const state = { ...initialState };
@@ -19,13 +19,13 @@ export const actions = {
 
 export const mutations = {
   [SET_EVOLUTION](state, evolution) {
-    state.evolution = evolution;
+    state.evolutionChain = evolution;
   }
 };
 
 const getters = {
-  evolution(state) {
-    return state.evolution;
+  evolutionChain(state) {
+    return state.evolutionChain;
   }
 };
 

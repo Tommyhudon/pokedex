@@ -1,7 +1,7 @@
 import api from "./api";
 
-const getPokemon = pokemonId => {
-  return api.get(`/pokemon/${pokemonId}`);
+const getPokemon = pokemonName => {
+  return api.get(`/pokemon/${pokemonName}`);
 };
 
 const getPokemons = url => {

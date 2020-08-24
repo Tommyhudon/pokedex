@@ -44,7 +44,7 @@
 
 <script>
 import Vue from "vue";
-import Loading from "@/components/Loading";
+import Loading from "@/components/util/Loading";
 import { mapState } from "vuex";
 import { GET_EVOLUTION, GET_POKEMON, GET_SPECIES } from "@/store/action-types";
 
@@ -69,8 +69,8 @@ export default {
     species: async function() {
       await this.loadEvolution();
     },
-    evolution: function() {
-      this.findInChain(this.evolution);
+    evolutionChain: function() {
+      this.findInChain(this.evolutionChain);
       this.loading = false;
     }
   },
@@ -92,9 +92,7 @@ export default {
         });
     },
     findInChain: function(chain) {
-      console.log(this.pokemon.name);
       if (chain.species.name === this.pokemon.name) {
-        console.log(chain.species.name);
         if (chain.evolves_to.length === 0) {
           this.pokemonEvolution = null;
         } else {
@@ -112,7 +110,7 @@ export default {
   computed: mapState({
     pokemon: state => state.pokemons.selectedPokemon,
     species: state => state.pokemons.selectedPokemonSpecies,
-    evolution: state => state.evolution.evolution
+    evolutionChain: state => state.evolution.evolutionChain
   })
 };
 </script>
@@ -167,6 +165,22 @@ export default {
         text-align: left;
         padding: 1em;
         font-size: medium;
+      }
+    }
+  }
+}
+@media screen and (max-width: 900px) {
+  .selected-pokemon {
+    .pokemon-image-container {
+      width: 40%;
+    }
+    .pokemon-information-container {
+      width: auto;
+      max-width: 90%;
+      .pokemon-information {
+        span {
+          padding: 0.5em;
+        }
       }
     }
   }

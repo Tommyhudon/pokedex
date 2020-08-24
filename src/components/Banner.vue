@@ -18,7 +18,15 @@ export default {
   img {
     height: auto;
     width: 8%;
-    margin-left: 3%;
+    margin-left: 25%;
+  }
+}
+@media screen and (max-width: 900px) {
+  .banner {
+    img {
+      margin-left: 2%;
+      width: 20%;
+    }
   }
 }
 </style>
