@@ -1,0 +1,3 @@
+[submodule "PR"]
+	path = PR
+	url = git@github.com:Tommyhudon/warhammer-battle.git
