@@ -1,0 +1,1 @@
+warhammer-battle/pull_request_template.md
